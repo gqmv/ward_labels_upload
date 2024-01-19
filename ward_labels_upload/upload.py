@@ -56,6 +56,56 @@ class LabelUploader:
         if response.status_code != 200:
             raise LabelUploadFailedException("The Ward Analytics API returned an error.")
 
+    
+    def _delete_batch(self, labels: list[Label]) -> None:
+        """ Deletes a batch of labels from the Ward Analytics API."
+        
+        Args:
+            addresses (List[str]): The list of addresses to delete.
+            
+        Raises:
+            LabelUploadFailedException: If the Ward Analytics API returns an error.
+        """
+        
+        labels_dict: dict[str, list[str]] = {}
+
+        for label in labels:
+            if label.address not in labels_dict:
+                labels_dict[label.address] = []
+            labels_dict[label.address].append(label.label)
+            
+        payload = {
+            "labels": labels_dict,
+        }
+        
+        headers = {
+            "api": self._api_key
+        }
+        
+        response = requests.post(self._base_url + LABEL_UPLOAD_ENDPOINT, json=payload, headers=headers)
+        
+        if response.status_code != 200:
+            raise LabelUploadFailedException("The Ward Analytics API returned an error.")
+        
+        
+    def delete_labels(self, labels: list[Label]) -> None:
+        """ Deletes a list of labels from the Ward Analytics API.
+        
+        If the list of labels is too big, it will be split into multiple upload batches.
+        Will display a progress bar.
+        
+        Args:
+            labels (List[Label]): The list of labels to delete.
+            
+        Raises:
+            LabelUploadFailedException: If the Ward Analytics API returns an error.
+        """
+        BATCH_SIZE = 1000
+        
+        batches = split_into_batches(labels, BATCH_SIZE)
+        for batch in tqdm(batches, unit="batch", desc="Deleting labels"):
+            self._delete_batch(batch)
+            
         
     
     def upload_labels(self, labels: list[Label]) -> None:
@@ -75,5 +125,7 @@ class LabelUploader:
         batches = split_into_batches(labels, BATCH_SIZE)
         for batch in tqdm(batches, unit="batch", desc="Uploading labels"):
             self._upload_batch(batch)
+            
+    
         
 
