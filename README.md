@@ -47,3 +47,20 @@ labels = [
 uploader.delete_labels(labels=labels)
 ```
 In the case of deletion, the description field is unnecessary. This happens because a label is uniquely identified by the combination of its address and label.
+
+### Label Retrieval
+
+```python
+from ward_labels_upload import Label, LabelUploader
+
+uploader = LabelUploader(api_key="your_api_key")
+
+# Note that all addresses are normalized to lowercase. This is necessary for blockchains suck as Ethereum.
+addresses = [
+    "0x12ef3",
+    "0x45af6",
+    "0x78cs9",
+]
+
+labels = uploader.get_labels(addresses=addresses)
+```
