@@ -11,4 +11,4 @@ class Label(BaseModel):
     """
     address: str
     label: str
-    description: str
+    description: str = ""
