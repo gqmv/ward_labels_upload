@@ -12,6 +12,33 @@ pip install ward-labels-upload
 
 ## Usage
 
+### The Label Object
+
+The `Label` object is used to represent a label. It has three fields:
+- `address`: The address of the label.
+- `label`: The label itself.
+- `description`: A description of the label.
+
+It also has a `is_address_case_sensitive` field, which defaults to `False`. This field is used to determine whether the address field should be treated as case sensitive or not. In most cases, this field should be left as `False` (For blockchains such as Ethereum, addresses are not case sensitive).
+
+``` python
+from ward_labels_upload import Label
+
+label = Label(address="0x12eF3", label="label1", description="description1")
+print(label)
+
+>>> Label(address="0x12ef3", label="label1", description="description1", is_address_case_sensitive=False)
+```
+
+``` python
+from ward_labels_upload import Label
+
+label = Label(address="0x12eF3", label="label1", description="description1", is_address_case_sensitive=True)
+print(label)
+
+>>> Label(address="0x12eF3", label="label1", description="description1", is_address_case_sensitive=True)
+```
+
 ### Label Upload
 
 ```python
@@ -19,7 +46,6 @@ from ward_labels_upload import Label, LabelUploader
 
 uploader = LabelUploader(api_key="your_api_key")
 
-# Note that all addresses are normalized to lowercase. This is necessary for blockchains suck as Ethereum.
 labels = [
     Label(address="0x12ef3", label="label1", description="description1"),
     Label(address="0x45af6", label="label2", description="description2"),
@@ -37,7 +63,6 @@ from ward_labels_upload import Label, LabelUploader
 
 uploader = LabelUploader(api_key="your_api_key")
 
-# Note that all addresses are normalized to lowercase. This is necessary for blockchains suck as Ethereum.
 labels = [
     Label(address="0x12ef3", label="label1"),
     Label(address="0x45af6", label="label2"),
@@ -55,7 +80,6 @@ from ward_labels_upload import Label, LabelUploader
 
 uploader = LabelUploader(api_key="your_api_key")
 
-# Note that all addresses are normalized to lowercase. This is necessary for blockchains suck as Ethereum.
 addresses = [
     "0x12ef3",
     "0x45af6",
