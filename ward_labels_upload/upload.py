@@ -49,7 +49,7 @@ class LabelUploader:
 
         payload = {"labels": labels_dict, "descriptions": descriptions_dict}
 
-        headers = {"api": self._api_key}
+        headers = {"Authorization": f"Bearer {self._api_key}"}
 
         response = requests.post(
             self._base_url + LABEL_UPLOAD_ENDPOINT, json=payload, headers=headers
@@ -69,6 +69,8 @@ class LabelUploader:
         Raises:
             LabelUploadFailedException: If the Ward Analytics API returns an error.
         """
+        
+        raise NotImplementedError("This method is not implemented yet.")
 
         labels_dict: dict[str, list[str]] = {}
 
@@ -77,14 +79,12 @@ class LabelUploader:
                 labels_dict[label.address] = []
             labels_dict[label.address].append(label.label)
 
-        payload = {
-            "labels": labels_dict,
-        }
+        params = {"labels": labels_dict}
 
-        headers = {"api": self._api_key}
+        headers = {"Authorization": f"Bearer {self._api_key}"}
 
-        response = requests.post(
-            self._base_url + LABEL_DELETE_ENDPOINT, json=payload, headers=headers
+        response = requests.delete(
+            self._base_url + LABEL_DELETE_ENDPOINT, params=params, headers=headers
         )
 
         if response.status_code != 200:
@@ -141,7 +141,7 @@ class LabelUploader:
             "addresses": addresses,
         }
 
-        headers = {"api": self._api_key}
+        headers = {"Authorization": f"Bearer {self._api_key}"}
 
         response = requests.post(
             self._base_url + LABEL_GET_ENDPOINT, json=payload, headers=headers
