@@ -69,9 +69,6 @@ class LabelUploader:
         Raises:
             LabelUploadFailedException: If the Ward Analytics API returns an error.
         """
-        
-        raise NotImplementedError("This method is not implemented yet.")
-
         labels_dict: dict[str, list[str]] = {}
 
         for label in labels:
@@ -79,14 +76,13 @@ class LabelUploader:
                 labels_dict[label.address] = []
             labels_dict[label.address].append(label.label)
 
-        params = {"labels": labels_dict}
+        payload = labels_dict
 
         headers = {"Authorization": f"Bearer {self._api_key}"}
 
-        response = requests.delete(
-            self._base_url + LABEL_DELETE_ENDPOINT, params=params, headers=headers
+        response = requests.post(
+            self._base_url + LABEL_DELETE_ENDPOINT, json=payload, headers=headers
         )
-
         if response.status_code != 200:
             raise LabelUploadFailedException(
                 "The Ward Analytics API returned an error."

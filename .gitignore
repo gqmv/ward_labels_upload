@@ -8,6 +8,7 @@ __pycache__/
 *.so
 
 playground.py
+.DS_Store
 
 # Distribution / packaging
 .Python
